@@ -155,7 +155,24 @@ def extra_credit(filepath):
     Please see the instructions document for more information on how to complete this function.
     You do not have to write test cases for this function.
     """
-    pass
+    file = open(filepath)
+    text = file.read()
+    file.close() 
+    soup = BeautifulSoup(text, 'html.parser')
+
+    description = soup.findAll(id="description")[0].findAll('span')[1]
+    allText = description.findAll(text=True)
+    text = ''
+    for i in allText:
+        text = text + str(i.string)
+        # [A-Z][a-z][a-z]+ [A-Z][a-z.\d]+( [A-Z][a-z.\d]+)*
+        # [A-Z][a-z][a-z]+ [A-Z][a-z.\d]+\s*([A-Z][a-z.\d]+)*
+    pattern = r"[A-Z][a-z][a-z]+ [A-Z][a-z.\d]+(?: [A-Z][a-z.\d]+)*"
+    namedEntities = re.findall(pattern, text)
+
+    return namedEntities
+    
+
 
 class TestCases(unittest.TestCase):
     # call get_search_links() and save it to a static variable: search_urls
